@@ -49,7 +49,7 @@ const EnterScreen = props => {
             </Picker>
             <FlatButton text='כניסה' buttonTop={110}
                 on_Press={()=> {if(isSelectedOne && isSelectedTwo && isSelectedThree && isSelectedFour)
-                                    props.navigation.navigate('Home');
+                                    props.navigation.navigate('Stay');
                                 else
                                     alert('את/ה לא רשאי/ת להיכנס! הודעה נשלחה לבעל/ת העסק.');}}/>
         </View>
