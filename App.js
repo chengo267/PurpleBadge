@@ -8,6 +8,11 @@ import StayShopScreen from './src/screens/StayShopScrren';
 import CreateUserScreen from './src/screens/CreateUserScreen';
 import LoginScreen from './src/screens/LoginScreen';
 import * as firebase from 'firebase';
+import "firebase/firestore";
+
+import {decode, encode} from 'base-64';
+if (!global.btoa) {  global.btoa = encode }
+if (!global.atob) { global.atob = decode }
 
 const firebaseConfig = {
   apiKey: "AIzaSyDjBluS_61uj00Rtn_VS2iufonnSaPZ1kE",
@@ -18,11 +23,10 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-var database = firebase.database();
-database.ref('UsersDetails/' + "test").set({
+var db = firebase.firestore();
+db.collection("UsersDetails").doc("test2").set({
   test: "test"
 });
-
 
 const navigator = createStackNavigator(
   {
