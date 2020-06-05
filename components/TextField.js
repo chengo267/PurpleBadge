@@ -1,12 +1,14 @@
 import React from 'react';
 import { StyleSheet, View, Text, TextInput} from 'react-native';
 
-export default function TextField({text, on_change_taxt, val}) {
+export default function TextField({text, on_change_taxt, val, secureText}) {
     return (
         <View >
             <TextInput 
                 style={styles.inputStyle}
                 placeholder= {text}
+                autoCorrect={false}
+                secureTextEntry={secureText}
                 placeholderTextColor='#808080'
                 onChangeText={on_change_taxt}
                 value={val}

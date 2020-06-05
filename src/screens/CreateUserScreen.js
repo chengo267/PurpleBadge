@@ -1,14 +1,19 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Image, Text} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import TextField from '../../components/TextField';
 import FlatButton from '../../components/FlatButton';
-import { useScreens } from 'react-native-screens';
+import * as firebase from 'firebase';
+import "firebase/firestore";
+import {isFullName, isId, isPhoneNum, isValidPassword} from "../shared/inputValidaton";
+import IconAnt from 'react-native-vector-icons/AntDesign';
+
 
 const CreateUserScreen = props => {
     const [name, setName] = useState('');
     const [id, setId] = useState('');
     const [tel, setTel] = useState('');
     const [password, setPassword] = useState('');
+    const refUsers = firebase.firestore().collection('UsersDetails');
 
     return (
         <View style= {styles.viewStyle}>
@@ -29,8 +34,28 @@ const CreateUserScreen = props => {
             <TextField text={'סיסמה'}
                        val={password}
                        on_change_taxt={newPassword=> setPassword(newPassword)}/>
-            <FlatButton text={'אישור'} buttonTop={80}
-                on_Press={()=> props.navigation.navigate('Home')}/>
+            <View top={-40} left={15} alignSelf={'baseline'}>
+                <TouchableOpacity onPress={()=> Alert.alert('הוראה','הסיסמה צריכה להיות מורכבת מלפחות 8 תווים של אותיות אנגליות ומספרים')}>
+                    <View >
+                        <IconAnt name={'exclamationcircleo'} size={20}></IconAnt>
+                    </View>
+                </TouchableOpacity>
+            </View> 
+            <FlatButton text={'אישור'} buttonTop={80} 
+                on_Press={()=> {
+                    if((!isFullName(name)) || (!isId(id)) || (!isPhoneNum(tel)) || (!isValidPassword(password))){
+                        Alert.alert('שגיאה', 'חלק מהפרטים חסרים או לא מלאים כראוי');
+                    }
+                    else{
+                            var newUser={
+                                name: name, 
+                                id: id,
+                                tel: tel,
+                                password: password,
+                                shops: null}
+
+                            refUsers.doc(id).set(newUser);
+                            props.navigation.navigate('Login');}}}/>
         </View>
     );
 };

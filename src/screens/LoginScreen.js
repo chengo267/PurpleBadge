@@ -21,10 +21,11 @@ const LoginScreen = props => {
                 <View top={20}>
                     <TextField text={'סיסמה'}
                                val={password}
+                               secureText= {true}
                                on_change_taxt={newPassword=> setPassword(newPassword)}/>
                 </View>
-                <FlatButton text={'התחבר'} buttonTop={90}
-                    on_Press={()=> {props.navigation.navigate('Home')}}/>
+                <FlatButton text={'התחבר'} buttonTop={90} 
+                    on_Press={()=> {props.navigation.navigate('HomeLog')}}/>
             </View>
         </View>
     );

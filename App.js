@@ -1,12 +1,14 @@
 import { createAppContainer} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import 'react-native-gesture-handler';
-import HomeScreen from './src/screens/HomeScreen';
+import HomeScreenLog from './src/screens/HomeScreenLog';
+import HomeScreenUnlog from './src/screens/HomeScreenUnlog';
 import NewShopScreen from './src/screens/NewShopScreen';
 import EnterScreen from './src/screens/EnterScreen';
 import StayShopScreen from './src/screens/StayShopScrren';
 import CreateUserScreen from './src/screens/CreateUserScreen';
 import LoginScreen from './src/screens/LoginScreen';
+import ShopsListScreen from './src/screens/ShopsListScreen';
 import * as firebase from 'firebase';
 import "firebase/firestore";
 
@@ -19,29 +21,32 @@ const firebaseConfig = {
   authDomain: "purplebadge-6e593.firebaseapp.com",
   databaseURL: "https://purplebadge-6e593.firebaseio.com",
   projectId: "purplebadge-6e593",
-  storageBucket: "purplebadge-6e593.appspot.com"
+  storageBucket: "purplebadge-6e593.appspot.com",
+  messagingSenderId: "764868294122",
+  appId: "1:764868294122:web:9d27b6c8991771dfa1ee93",
+ // measurementId: "G-XXXXXXX"
 };
 
 firebase.initializeApp(firebaseConfig);
-var db = firebase.firestore();
-db.collection("UsersDetails").doc("test2").set({
-  test: "test"
-});
 
 const navigator = createStackNavigator(
   {
-    Home: HomeScreen,
+    HomeLog: HomeScreenLog,
+    HomeUnlog: HomeScreenUnlog,
     NewShop: NewShopScreen,
     Enter: EnterScreen,
     Stay: StayShopScreen,
     CreateUser: CreateUserScreen,
-    Login: LoginScreen
+    Login: LoginScreen,
+    ShopsList: ShopsListScreen
   },
   {
-    initialRouteName: "Home",
+    initialRouteName: "ShopsList",
     defaultNavigationOptions: {
-      title: "App"
-    }
+      title: "App",
+      headerTitle:"התו הסגול",
+      headerLeft: false
+    },
   }
 );
 
