@@ -1,16 +1,20 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity, Picker} from 'react-native';
-import IconAnt from 'react-native-vector-icons/AntDesign';
+import { StyleSheet, View, Image, Text, Alert} from 'react-native';
 import Checkbox from '../../components/Checkbox';
 import FlatButton from '../../components/FlatButton';
+import { Dropdown } from 'react-native-material-dropdown';
+import "firebase/firestore";
 
 const EnterScreen = props => {
+
+    const [role, setRole] = useState('');
     const [isSelectedOne, setSelectionOne] = useState(false);
     const [isSelectedTwo, setSelectionTwo] = useState(false);
     const [isSelectedThree, setSelectionThree] = useState(false);
     const [isSelectedFour, setSelectionFour] = useState(false);
-
-    
+   
+    const roleList=[{value: 'לקוח'}, {value: 'ספק'}, {value: 'עובד'}];
+   
     return (
         <View style= {styles.viewStyle}>
             <Image
@@ -18,14 +22,6 @@ const EnterScreen = props => {
                 source = {require('../../assets/logo.png')}
             />
             <Text style={styles.textStyle}>כניסה לבית עסק</Text>
-            <View top={20}>
-                <TouchableOpacity>
-                    <View style={styles.buttonStyle} >
-                        <Text style={styles.buttonText}>לסריקת קוד בית העסק</Text>
-                        <IconAnt name={'camera'} size={20} color={'white'}></IconAnt>
-                    </View>
-                </TouchableOpacity>
-            </View> 
             <View top={50}>
                 <Checkbox text={'לא משתעל (באופן לא כרוני)'}
                           val={isSelectedOne}
@@ -42,16 +38,26 @@ const EnterScreen = props => {
                           on_val_change={setSelectionFour}  />
                 <Text style={styles.textCheckStyle}>בשבועיים האחרונים</Text>
             </View>
-            <Picker style={styles.pickerStyle}>
-                <Picker.Item label='לקוח' value="לקוח" />
-                <Picker.Item label="עובד" value="עובד" />
-                <Picker.Item label="ספק" value="ספק" />
-            </Picker>
-            <FlatButton text='כניסה' buttonTop={110}
-                on_Press={()=> {if(isSelectedOne && isSelectedTwo && isSelectedThree && isSelectedFour)
-                                    props.navigation.navigate('Stay');
+            <View style={styles.dropdownStyle} top={50}>
+                <Dropdown label='בחר תפקיד' 
+                          data={roleList}
+                          value={role}
+                          onChangeText={newRole=> setRole(newRole)}
+                          containerStyle={styles.dropdownRoleStyle}
+                           />
+            </View>
+            <FlatButton text='כניסה' buttonTop={80} 
+                on_Press={()=> {if(isSelectedOne && isSelectedTwo && isSelectedThree && isSelectedFour && (role!=''))
+                                    {
+                                        var newVisit={enter: new Date().toLocaleString(),
+                                                      shopName: props.navigation.getParam('shopName'),
+                                                      role: role  }
+                                        props.navigation.navigate('Stay', newVisit);
+                                    }
+                                else if(role=='')
+                                    Alert.alert('שגיאה','חלק מהפרטים לא מלאים');
                                 else
-                                    alert('את/ה לא רשאי/ת להיכנס! הודעה נשלחה לבעל/ת העסק.');}}/>
+                                    Alert.alert('הוראה','את/ה לא רשאי/ת להיכנס!');}}/>
         </View>
     );
 };
@@ -70,29 +76,16 @@ const styles = StyleSheet.create({
         fontSize: 15,
         alignSelf:'center'
     },
-    buttonStyle:{
-        borderRadius: 20,
-        paddingVertical: 10, 
-        paddingHorizontal: 10,
-        width:200,
-        alignSelf:'center',
-        backgroundColor:'#8b008b',
-        flexDirection:'row'
-    },
-    buttonText:{
-        color: 'white',
-        fontSize: 16, 
-        textAlign: 'center'
-    },
     textCheckStyle:{
         fontSize:20,
-        textAlign:'right', 
+        textAlign:'right',
         left: -80
     },
-    pickerStyle:{
-        top:60,
-        left:-30
-    }
+    dropdownRoleStyle:{
+        padding: 5, 
+        width:110, 
+        left:170, 
+        height:70}
 });
 
 export default EnterScreen;
