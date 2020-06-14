@@ -1,18 +1,24 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, Text, BackHandler} from 'react-native';
 import CircleButton from '../../components/CircleButton';
 import * as firebase from 'firebase';
 import "firebase/firestore";
 
-const logedInUser={
-    id: "123456",
-    name: "chen",
-    password:"password",
-    tel: "0505050505"
-}
-  
 const StayShopScreen = props => {
+    const [ userName, setUserName ] = useState('');
+    const [ phonNum, setPhonNum ] = useState('');
+    const [ userId, setUserId ] = useState('');
+    
     const refVisits = firebase.firestore().collection('Visits');
+    const refUsersDetails = firebase.firestore().collection('UsersDetails');
+   
+    const logedInUserDBId= firebase.auth().currentUser.uid;
+    
+    refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name, tel, id} = doc.data();
+                                                            setUserName(name);
+                                                            setPhonNum(tel);
+                                                            setUserId(id);});
+    
 
     useEffect(() => {
         const backAction = () => {return true;};
@@ -27,7 +33,7 @@ const StayShopScreen = props => {
                 source = {require('../../assets/logo.png')}
             />
             <View top={10}>
-                <Text style={styles.textStyle}>אתה רשאי להיכנס</Text>
+                <Text style={styles.textStyle}>את/ה רשאי/ת להיכנס</Text>
                 <Text style={styles.textStyle}>ל{props.navigation.getParam('shopName')}</Text>
                 <Text style={styles.textStyle}>LOGO</Text>
                 <Image style= {styles.logoStyle}
@@ -39,10 +45,11 @@ const StayShopScreen = props => {
             </View>
             <CircleButton text={'צא'} buttonTop={20} 
                 on_Press={()=> { var newVisit={
-                                    id: logedInUser.id,
-                                    name: logedInUser.name,
-                                    tel: logedInUser.tel,
+                                    id: userId,
+                                    name: userName,
+                                    tel: phonNum,
                                     shop: props.navigation.getParam('shopName'),
+                                    shopId: props.navigation.getParam('shopId'),
                                     role: props.navigation.getParam('role'),
                                     enterTime: props.navigation.getParam('enter'),
                                     exitTime: new Date().toLocaleString()

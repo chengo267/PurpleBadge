@@ -4,14 +4,13 @@ import TextField from '../../components/TextField';
 import FlatButton from '../../components/FlatButton';
 import * as firebase from 'firebase';
 import "firebase/firestore";
-import {isFullName, isId, isPhoneNum, isValidPassword} from "../shared/inputValidaton";
+import {isFullName, isId, isValidPassword} from "../shared/inputValidaton";
 import IconAnt from 'react-native-vector-icons/AntDesign';
 
 
 const CreateUserScreen = props => {
     const [name, setName] = useState('');
     const [id, setId] = useState('');
-    const [tel, setTel] = useState('');
     const [password, setPassword] = useState('');
     const refUsers = firebase.firestore().collection('UsersDetails');
 
@@ -28,9 +27,6 @@ const CreateUserScreen = props => {
             <TextField text={'מספר ת"ז'}
                        val={id}
                        on_change_taxt={newId=> setId(newId)}/>
-            <TextField text={'מספר פלאפון'}
-                       val={tel}
-                       on_change_taxt={newTel=> setTel(newTel)}/>
             <TextField text={'סיסמה'}
                        val={password}
                        on_change_taxt={newPassword=> setPassword(newPassword)}/>
@@ -43,19 +39,20 @@ const CreateUserScreen = props => {
             </View> 
             <FlatButton text={'אישור'} buttonTop={80} 
                 on_Press={()=> {
-                    if((!isFullName(name)) || (!isId(id)) || (!isPhoneNum(tel)) || (!isValidPassword(password))){
+                    if((!isFullName(name)) || (!isId(id)) || (!isValidPassword(password))){
                         Alert.alert('שגיאה', 'חלק מהפרטים חסרים או לא מלאים כראוי');
                     }
                     else{
                             var newUser={
                                 name: name, 
                                 id: id,
-                                tel: tel,
+                                tel: props.navigation.getParam('phoneNun'),
                                 password: password,
-                                shops: null}
-
-                            refUsers.doc(id).set(newUser);
-                            props.navigation.navigate('Login');}}}/>
+                                shops: []}
+                            
+                            var userDBid= props.navigation.getParam('userId')
+                            refUsers.doc(userDBid).set(newUser);
+                            props.navigation.navigate('HomeLog');}}}/>
         </View>
     );
 };

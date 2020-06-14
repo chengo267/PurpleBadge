@@ -26,17 +26,15 @@ export function isWord(str)
 
 export function isId(id)
 {
-    if (id.length !== 9 || isNaN(id)) {  // Make sure ID is formatted properly
+    if (id.length !== 9 || isNaN(id)) {  
         return false;
     }
     let sum = 0, incNum;
     for (const i in id) {
-        incNum = Number(id[i]) * ((i % 2) + 1);  // Multiply number by 1 or 2
-        sum += (incNum > 9) ? incNum - 9 : incNum;  // Sum the digits up and add to total
+        incNum = Number(id[i]) * ((i % 2) + 1); 
+        sum += (incNum > 9) ? incNum - 9 : incNum;  
     }
     return (sum % 10 === 0);
-    // var res= (/^[0-9]/.test(id) && (id.length==9));
-    // return res;
 }
 
 export function isPhoneNum(num)
@@ -48,7 +46,7 @@ export function isPhoneNum(num)
     else
         phoneNum=num;
 
-    var res= (/^[0-9]/.test(phoneNum) && (phoneNum.length==10));
+    var res= (/^[0-9]/.test(phoneNum) && ((phoneNum.length==10) || (phoneNum.length==9)));
     return res;
 };
 

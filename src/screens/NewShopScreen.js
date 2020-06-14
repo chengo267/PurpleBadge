@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Image, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import TextField from '../../components/TextField';
 import FlatButton from '../../components/FlatButton';
@@ -6,15 +6,7 @@ import * as firebase from 'firebase';
 import "firebase/firestore";
 import {isFullName, isId, isPhoneNum} from "../shared/inputValidaton";
 import * as ImagePicker from 'expo-image-picker';
-import QRCode from 'react-native-qrcode-svg';
-
-
-const logedInUser={
-    id: "123456",
-    name: "chen",
-    password:"password",
-    tel: "0505050505"
-}
+import QRCode from 'qrcode';
 
 const NewShopScreen = props => {
     const [shopName, setShopName] = useState('');
@@ -22,8 +14,28 @@ const NewShopScreen = props => {
     const [bosName, setBosName] = useState('');
     const [bosTel, setBosTel] = useState('');
     const [bosId, setBosId] = useState('');
+    const [qrCode, setQrCode] = useState('');
     const [image, setImage]= useState('https://748073e22e8db794416a-cc51ef6b37841580002827d4d94d19b6.ssl.cf3.rackcdn.com/not-found.png');
     const [collectionSize, setCollectionSize] = useState(0);
+    const refShops = firebase.firestore().collection('ShopsDetails');
+    const refUsers = firebase.firestore().collection('UsersDetails');
+    const refCollectionSizeDoc=refShops.doc('collectionSize');
+    const logedInUserDBId= firebase.auth().currentUser.uid;
+    const increment=firebase.firestore.FieldValue.increment(1);
+  
+    refCollectionSizeDoc.get().then(doc=> {const {size} = doc.data();
+                                            setCollectionSize(size);});
+
+    useEffect(() => {
+        (async () => {
+            if (Constants.platform.ios) {
+                const { status } = await ImagePicker.requestCameraRollPermissionsAsync();
+                if (status !== 'granted') {
+                    Alert.alert('שגיאה', 'מצטערים, אין לנו גישה לגלריה');
+                }
+            }
+        })();
+      }, []);
 
     pickImage = async () => {
         var result = await ImagePicker.launchImageLibraryAsync({
@@ -36,9 +48,6 @@ const NewShopScreen = props => {
             setImage(result.uri);
         }
     };
-
-    const refShops = firebase.firestore().collection('ShopsDetails');
-    const refUsers = firebase.firestore().collection('UsersDetails');
 
     return (
         <KeyboardAvoidingView style={styles.viewStyle} behavior={'height'}>
@@ -63,21 +72,33 @@ const NewShopScreen = props => {
             <TextField text='מספר ת"ז'
                        val={bosId}
                        on_change_taxt={newId=> setBosId(newId)}/>
-            <View>
+            <View alignSelf={'center'}>
                 <Text style={styles.textStyle}>לוגו בית העסק</Text>
-                <TouchableOpacity onPress={pickImage}>
-                    <Image style= {styles.logoStyle}
-                        source = {{uri:image}}/>
+                <TouchableOpacity onPress={pickImage} >
+                    <View alignSelf={'center'}>
+                        <Image style= {styles.logoStyle}
+                            source = {{uri:image}}/>
+                    </View>
                 </TouchableOpacity>
             </View>
             <FlatButton text='אישור'
                         on_Press={()=> 
                         {
-                            if(address =='' || (!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || shopName =='')
-                                {
+                            if(address =='' || (!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || shopName ==''){
                                     Alert.alert('שגיאה','חלק מהפרטים חסרים או לא מלאים כראוי');
-                                }
+                            }
                             else{
+                                    var id = (collectionSize).toString();
+                                    var qrDetails={
+                                        shopName: shopName,
+                                        shopId:id
+                                    }
+
+                                    QRCode.toDataURL(qrDetails)
+                                    .then(url => {
+                                        setQrCode(url);
+                                    });
+
                                     var newShop={
                                         address: address, 
                                         bosId: bosId,
@@ -85,14 +106,13 @@ const NewShopScreen = props => {
                                         bosTel: bosTel,
                                         shopName: shopName,
                                         logo: image,
-                                        }
-                                    
-                                        refShops.get().then(snap => {
-                                            setCollectionSize(snap.size); 
-                                         });
-                                    var id = (collectionSize+1).toString();
+                                        qrCode:qrCode
+                                    }
+
                                     refShops.doc(id).set(newShop);
-                                    //refUsers.doc(logedInUser.id).update({shops: refShops.doc('ShopsDetails/'+id).ref});//like from user to the shop
+                                    var UserRef = refUsers.doc(logedInUserDBId);
+                                    UserRef.update({shops: firebase.firestore.FieldValue.arrayUnion( refShops.doc(id))});
+                                    refCollectionSizeDoc.update({size: increment});
                                     props.navigation.navigate('HomeLog');
                             }
                         }}/>
@@ -109,7 +129,7 @@ const styles = StyleSheet.create({
     imageStyle:{
         width: 170,
         height: 170,
-        left: 108
+        left: 108,
     },
     textStyle:{
         fontSize: 15,
@@ -121,6 +141,7 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
         margin: 10
     },
+
 });
 
 export default NewShopScreen;

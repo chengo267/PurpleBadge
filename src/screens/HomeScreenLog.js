@@ -1,88 +1,107 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
-import FlatButton from '../../components/FlatButton';
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList} from 'react-native';
 import * as firebase from 'firebase';
+import { ListItem, SearchBar } from 'react-native-elements';
 import "firebase/firestore";
-import SearchableDropdown from 'react-native-searchable-dropdown';
 import IconAnt from 'react-native-vector-icons/AntDesign';
-import FontAwesome5 from 'react-native-vector-icons';
-
-const logedInUser={
-    id: "123456",
-    name: "חן",
-    password:"password",
-    tel: "0505050505"
-}
 
 const HomeScreenLog = props => {
 
-    const [ shopName, setshopName ] = useState('');
+    const [ userName, setUserName ] = useState('');
+    const [ search, setSearch ] = useState('');
     const [ shopList, setshopList ] = useState([]);
+    const [ realTimeShopList, setRealTimeShopList ] = useState([]);
     const refShopsDetails = firebase.firestore().collection('ShopsDetails');
+    const refUsersDetails = firebase.firestore().collection('UsersDetails');
+    const logedInUserDBId= firebase.auth().currentUser.uid;
+    
+    refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name} = doc.data();
+                                                           setUserName(name);});
 
     useEffect(()=>{
         return refShopsDetails.onSnapshot(querySnapshot =>{
             const list = [];
             querySnapshot.forEach(doc =>{
-                const {shopName, logo}=doc.data();
-                list.push({id: doc.id, name: shopName});
+                if(doc.id!='collectionSize'){
+                    const {shopName, logo}=doc.data();
+                    list.push({id: doc.id, name: shopName, avatar_url: logo});
+                }
             });
             setshopList(list);
+            setRealTimeShopList(list);
         });
     }, []);
 
+    
+    searchFilterFunction = (newSearch)=> {
+
+        setSearch(newSearch);
+          const newShopList = shopList.filter(item => {
+            const itemData = `${item.name} ${item.id}`;
+            const textData = newSearch
+            return itemData.includes(textData); 
+          });
+        
+          setRealTimeShopList(newShopList);
+    }
+
+    renderHeader = () => {
+        return <SearchBar placeholder="Type Here..." 
+                          lightTheme
+                          round 
+                          onChangeText={(newSearch)=> searchFilterFunction(newSearch)}
+                          value={search}/>;
+    };
+    
     return (
         <View style= {styles.viewStyle}>
-            <Image
-                style= {styles.imageStyle}
-                source = {require('../../assets/logo.png')}
-            />
-            <Image
-                source={require('../../assets/instru.png')}/>
-            <Text style={styles.textStyle}> שלום {logedInUser.name}!</Text>
-            {/* <View top={20}>
-                <TouchableOpacity>
-                    <View style={styles.buttonStyle} >
-                        <Text style={styles.buttonText}>בחירת בית עסק מרשימה</Text>
-                        <IconAnt name={'clipboard-list'} size={20} color={'white'}></IconAnt>
-                    </View>
-                </TouchableOpacity>
-            </View>  */}
-            <View style={styles.dropdownStyle} >
-                <SearchableDropdown items={shopList}
-                                    onItemSelect={(item) => {setshopName(item.name)}}       
-                                    itemStyle={styles.itemStyle} 
-                                    placeholder={'בחר בית עסק'}
-                                    placeholderTextColor={'#808080'}
-                                    containerStyle={styles.containerStyle}
-                                     />
-            </View>
-            <View>
-                <TouchableOpacity>
-                    <View style={styles.buttonStyle} marginTop={30}>
-                        <Text style={styles.buttonText}>לסריקת קוד בית העסק</Text>
-                        <IconAnt name={'camera'} size={20} color={'white'}></IconAnt>
-                    </View>
-                </TouchableOpacity>
-            </View> 
-            <FlatButton 
-                    text='אישור '
-                    buttonTop={40}
-                    on_Press={()=>{var shop={shopName: shopName}
-                                   props.navigation.navigate('Enter',shop)}}/>
-            <View alignSelf={'center'} left={-140} top={90}>
-                <TouchableOpacity onPress={()=>props.navigation.navigate('HomeUnlog')}>
-                        <View>
+            <View flexDirection={'row'}>
+                <TouchableOpacity onPress={()=>props.navigation.navigate('Auth')}>
+                    <View>
                         <Text style= {styles.textLogoutStyle}>התנתק</Text>
                     </View>
                 </TouchableOpacity>
+                <Image
+                    style= {styles.imageStyle}
+                    source = {require('../../assets/logo.png')}
+                    />
             </View>
-            <View alignSelf={'center'} top={100} >
+            <Text style={styles.textStyle}> שלום {userName}!</Text>
+            <Image
+                source={require('../../assets/instru.png')}/>
+            <View alignSelf={'center'} >
                 <TouchableOpacity  onPress={()=>props.navigation.navigate('NewShop')}>
                         <View>
                         <Text>בעל בית עסק? לחץ כדי להוסיף אותו לאפליקציה!</Text>
                     </View>
                 </TouchableOpacity>
+            </View>
+            <View flexDirection={'row'} alignSelf={'center'}>
+                <View>
+                    <TouchableOpacity onPress={() => props.navigation.navigate('QRcodeScanner')}>
+                        <View style={styles.buttonStyle} >
+                            <IconAnt name={'camera'} size={30} color={'white'} ></IconAnt>
+                            <IconAnt name={'qrcode'} size={30} color={'white'}></IconAnt>
+                        </View>
+                    </TouchableOpacity>
+                </View> 
+                <View style={styles.viewListStyle}>
+                    <FlatList 
+                        data={realTimeShopList}
+                        renderItem={({ item }) => (
+                        <ListItem
+                            title={item.name}
+                            subtitle={'קוד בית העסק: '+item.id}
+                            leftAvatar={{ source: { uri: item.avatar_url } }}
+                            bottomDivider
+                            chevron    
+                            onPress={() => {var shop={shopName: item.name, shopId: item.id}
+                                            props.navigation.navigate('Enter',shop)}}
+                        />
+                        )}
+                        keyExtractor={item => item.id}
+                        ListHeaderComponent={renderHeader()}/>
+                </View>
             </View>
         </View>
     );
@@ -96,50 +115,37 @@ const styles = StyleSheet.create({
     imageStyle:{
         width: 170,
         height: 170,
-        left: 108
+        marginTop:0,
+        alignSelf:'center',
+        left: 50
+    },
+    viewListStyle:{
+        width:250, 
+        alignSelf:'flex-end',
+        marginTop:20
     },
     textLogoutStyle:{
         color: 'red',
         fontWeight: 'bold',
-        fontSize: 25
+        fontSize: 20,
+        left:20
     },
     textStyle:{
-        fontSize:25,
+        fontSize:20,
         alignSelf:'flex-end',
         color:'purple',
-        marginTop:30,
-    },
-    dropdownStyle:{
-        width:250,
-        alignSelf:'center',
-    },
-    itemStyle:{
-        padding: 10,
-        marginTop: 2,
-        backgroundColor: '#ddd',
-        borderColor: '#bbb',
-        borderWidth: 1,
-        borderRadius: 5,
-    },
-    containerStyle:{
-        padding: 5, 
-        backgroundColor:'#dcdcdc', 
-        marginTop:15 
     },
     buttonStyle:{
         borderRadius: 20,
         paddingVertical: 10, 
         paddingHorizontal: 10,
-        width:200,
+        width:80,
         alignSelf:'center',
         backgroundColor:'#8b008b',
+        marginRight:20,
+        marginTop:25,
         flexDirection:'row'
     },
-    buttonText:{
-        color: 'white',
-        fontSize: 16, 
-        textAlign: 'center'
-    }
 });
 
 export default HomeScreenLog;

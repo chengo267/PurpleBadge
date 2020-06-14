@@ -1,8 +1,6 @@
 import React, { useState } from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity} from 'react-native';
 import * as ImagePicker from 'expo-image-picker';
-import * as Constants from 'expo-constants';
-import * as Permissions from 'expo-permissions';
 
 export default function Logo(){
 

@@ -21,7 +21,7 @@ const EnterScreen = props => {
                 style= {styles.imageStyle}
                 source = {require('../../assets/logo.png')}
             />
-            <Text style={styles.textStyle}>כניסה לבית עסק</Text>
+            <Text style={styles.textStyle}>הצהרת בריאות</Text>
             <View top={50}>
                 <Checkbox text={'לא משתעל (באופן לא כרוני)'}
                           val={isSelectedOne}
@@ -51,6 +51,7 @@ const EnterScreen = props => {
                                     {
                                         var newVisit={enter: new Date().toLocaleString(),
                                                       shopName: props.navigation.getParam('shopName'),
+                                                      shopId: props.navigation.getParam('shopId'),
                                                       role: role  }
                                         props.navigation.navigate('Stay', newVisit);
                                     }
