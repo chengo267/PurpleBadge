@@ -1,48 +1,51 @@
 import React, {useState, useEffect} from 'react';
-import { Dimensions, LayoutAnimation, Text, View, StyleSheet } from 'react-native';
-import {BarCodeScanner} from 'expo';
+import { TouchableOpacity, Text, View, StyleSheet, Alert } from 'react-native';
+import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as Permissions from 'expo-permissions';
 
-const QRcodeScannerScreen = () => {
+const QRcodeScannerScreen = props => {
 
     const [ hasCameraPermission, setCameraPermission ] = useState(null);
-    const [ lastScannedUrl, setLastScannedUrl ] = useState(null);
+    const [ data, setData ] = useState(null);
 
-    _requestCameraPermission = async () => {
-        //const { status } = await Permissions.askAsync(Permissions.CAMERA);
+    requestCameraPermission = async () => {
         setCameraPermission(await Permissions.askAsync(Permissions.CAMERA));
     };
 
     useEffect(() => {
-        _requestCameraPermission();
+        requestCameraPermission();
     }, []);
 
-    handleBarCodeRead = result => {
-        if (result.data !== state.lastScannedUrl) {
-          LayoutAnimation.spring();
-          setLastScannedUrl(result.data);
-
-        }
+    handleBarCodeRead = ({ type, data }) => {
+      setData(data);
+      var index = data.search(" ");
+      var id = data.slice(0,index);
+      var name = data.slice(index+1);
+      if((index==-1)||/^[0-9]/.test(id)){
+        Alert.alert('ברקוד לא חוקי', 'שגיאה');
+      }
+      else{
+        var shop={shopName: name, shopId: id};
+        props.navigation.navigate('Enter',shop)
+      }
     };
 
     return (
-        <View style={styles.container}>
-            {hasCameraPermission == null
-            ? <Text>Requesting for camera permission</Text>
-            : hasCameraPermission == false
-                ? <Text style={{ color: '#fff' }}>
-                    Camera permission is not granted
-                  </Text>
-                : <View>
-                    <BarCodeScanner
-                        onBarCodeRead={handleBarCodeRead}
-                        style={{
-                        height: Dimensions.get('window').height,
-                        width: Dimensions.get('window').width,
-                        }}
-                    />
-                  </View>
-                }
+        <View>
+          <BarCodeScanner
+            onBarCodeScanned={handleBarCodeRead}
+            style={{
+            height: 630,
+            width: 400,}}
+            
+          />
+          <View alignSelf={'center'}>
+                <TouchableOpacity onPress={()=>props.navigation.navigate('HomeLog')}>
+                    <View >
+                        <Text style={styles.textStyle}>Cancel</Text>
+                    </View>
+                </TouchableOpacity>
+            </View>
         </View>
       );
 
@@ -50,11 +53,13 @@ const QRcodeScannerScreen = () => {
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
-        alignItems: 'center',
-        justifyContent: 'center',
-        backgroundColor: '#000',
+        // alignItems: 'center',
+        // justifyContent: 'center',
+        // backgroundColor: '#000',
       },
+      textStyle:{
+        fontSize:20
+      }
 });
 
 export default QRcodeScannerScreen;

@@ -1,5 +1,5 @@
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList} from 'react-native';
+import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, BackHandler} from 'react-native';
 import * as firebase from 'firebase';
 import { ListItem, SearchBar } from 'react-native-elements';
 import "firebase/firestore";
@@ -19,7 +19,7 @@ const HomeScreenLog = props => {
                                                            setUserName(name);});
 
     useEffect(()=>{
-        return refShopsDetails.onSnapshot(querySnapshot =>{
+        refShopsDetails.onSnapshot(querySnapshot =>{
             const list = [];
             querySnapshot.forEach(doc =>{
                 if(doc.id!='collectionSize'){
@@ -30,6 +30,10 @@ const HomeScreenLog = props => {
             setshopList(list);
             setRealTimeShopList(list);
         });
+
+        const backAction = () => {return true;};
+        const backHandler = BackHandler.addEventListener("hardwareBackPress",backAction);
+        return () => backHandler.remove();
     }, []);
 
     
@@ -71,7 +75,7 @@ const HomeScreenLog = props => {
                 source={require('../../assets/instru.png')}/>
             <View alignSelf={'center'} >
                 <TouchableOpacity  onPress={()=>props.navigation.navigate('NewShop')}>
-                        <View>
+                    <View>
                         <Text>בעל בית עסק? לחץ כדי להוסיף אותו לאפליקציה!</Text>
                     </View>
                 </TouchableOpacity>

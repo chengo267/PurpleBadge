@@ -53,7 +53,8 @@
     "uglify-es": "^3.2.2",
     "use-navigation": "0.0.3",
     "uuid": "^8.1.0",
-    "uuid-v4": "^0.1.0"
+    "uuid-v4": "^0.1.0",
+    "expo-barcode-scanner": "~8.1.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.1.0",
