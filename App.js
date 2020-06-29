@@ -9,6 +9,7 @@ import CreateUserScreen from './src/screens/CreateUserScreen';
 import AuthScreen from './src/screens/AuthScreen';
 import LoadingScreen from './src/screens/LoadingScreen';
 import QRcodeScannerScreen from './src/screens/QRcodeScannerScreen';
+import MapScreen from './src/screens/MapScreen';
 import * as firebase from 'firebase';
 import "firebase/firestore";
 
@@ -37,7 +38,8 @@ const navigator = createStackNavigator(
     Enter: EnterScreen,
     Stay: StayShopScreen,
     NewShop: NewShopScreen,
-    QRcodeScanner: QRcodeScannerScreen
+    QRcodeScanner: QRcodeScannerScreen,
+    Map: MapScreen
   },
   {
     initialRouteName: "Loading",

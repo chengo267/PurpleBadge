@@ -16,7 +16,7 @@ const HomeScreenLog = props => {
     const logedInUserDBId= firebase.auth().currentUser.uid;
     
     refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name} = doc.data();
-                                                           setUserName(name);});
+                                                           setUserName(name);}).catch(error=> console.log('Get Data Error'));;
 
     useEffect(()=>{
         refShopsDetails.onSnapshot(querySnapshot =>{

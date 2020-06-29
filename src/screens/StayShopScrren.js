@@ -17,7 +17,7 @@ const StayShopScreen = props => {
     refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name, tel, id} = doc.data();
                                                             setUserName(name);
                                                             setPhonNum(tel);
-                                                            setUserId(id);});
+                                                            setUserId(id);}).catch(error=> console.log('Get Data Error'));;
     
 
     useEffect(() => {
@@ -35,10 +35,6 @@ const StayShopScreen = props => {
             <View top={10}>
                 <Text style={styles.textStyle}>את/ה רשאי/ת להיכנס</Text>
                 <Text style={styles.textStyle}>ל{props.navigation.getParam('shopName')}</Text>
-                <Text style={styles.textStyle}>LOGO</Text>
-                <Image style= {styles.logoStyle}
-                        source = {{uri:props.navigation.getParam('logo')}}
-                />
             </View>
             <View>
                 <Text style={styles.textStyle}>ליציאה לחץ "צא"</Text>

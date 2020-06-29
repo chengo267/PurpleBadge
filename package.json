@@ -15,8 +15,10 @@
     "@ui-kitten/eva-icons": "^5.0.0",
     "base-64": "^0.1.0",
     "expo": "~37.0.3",
+    "expo-barcode-scanner": "~8.1.0",
     "expo-firebase-recaptcha": "^1.1.0",
     "expo-image-picker": "^8.1.0",
+    "expo-location": "^8.2.1",
     "expo-permissions": "~8.1.0",
     "firebase": "7.9.0",
     "firebase-admin": "^8.12.1",
@@ -24,6 +26,7 @@
     "qrious": "^4.0.2",
     "react": "~16.9.0",
     "react-dom": "~16.9.0",
+    "react-entypo-icons": "^1.4.1",
     "react-native": "https://github.com/expo/react-native/archive/sdk-37.0.1.tar.gz",
     "react-native-camera": "^3.30.0",
     "react-native-complete-flatlist": "^2.0.3",
@@ -32,6 +35,7 @@
     "react-native-gesture-handler": "^1.6.1",
     "react-native-image-picker": "^2.3.1",
     "react-native-localization": "^2.1.6",
+    "react-native-maps": "0.26.1",
     "react-native-material-dropdown": "^0.11.1",
     "react-native-modal-dropdown": "^0.7.0",
     "react-native-permissions": "^2.1.5",
@@ -53,8 +57,7 @@
     "uglify-es": "^3.2.2",
     "use-navigation": "0.0.3",
     "uuid": "^8.1.0",
-    "uuid-v4": "^0.1.0",
-    "expo-barcode-scanner": "~8.1.0"
+    "uuid-v4": "^0.1.0"
   },
   "devDependencies": {
     "babel-preset-expo": "~8.1.0",

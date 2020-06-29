@@ -35,7 +35,7 @@ const AuthScreen = props => {
     const phoneProvider = new firebase.auth.PhoneAuthProvider();
     phoneProvider
       .verifyPhoneNumber(legalPhone, recaptchaVerifier.current)
-      .then(setVerificationId); 
+      .then(setVerificationId).catch(error=> console.log('Auth Error')); 
   };
   
   const confirmCode = () => { 
@@ -46,7 +46,7 @@ const AuthScreen = props => {
     firebase
       .auth()
       .signInWithCredential(credential)
-      .then((result)=>{ setUserObj(result)})
+      .then((result)=>{ setUserObj(result)}).catch(error=> console.log('Auth Error'));
   };
 
   

@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Image, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import TextField from '../../components/TextField';
 import FlatButton from '../../components/FlatButton';
+import IconAnt from 'react-native-vector-icons/AntDesign';
 import * as firebase from 'firebase';
 import "firebase/firestore";
 import {isFullName, isId, isPhoneNum} from "../shared/inputValidaton";
@@ -14,7 +15,6 @@ const NewShopScreen = props => {
     const [bosName, setBosName] = useState('');
     const [bosTel, setBosTel] = useState('');
     const [bosId, setBosId] = useState('');
-    const [qrCode, setQrCode] = useState('');
     const [image, setImage]= useState('https://748073e22e8db794416a-cc51ef6b37841580002827d4d94d19b6.ssl.cf3.rackcdn.com/not-found.png');
     const [collectionSize, setCollectionSize] = useState(0);
     const refShops = firebase.firestore().collection('ShopsDetails');
@@ -24,7 +24,7 @@ const NewShopScreen = props => {
     const increment=firebase.firestore.FieldValue.increment(1);
   
     refCollectionSizeDoc.get().then(doc=> {const {size} = doc.data();
-                                            setCollectionSize(size);});
+                                            setCollectionSize(size);}).catch(error=> console.log('Get Data Error'));;
 
     useEffect(() => {
         (async () => {
@@ -60,9 +60,14 @@ const NewShopScreen = props => {
             <TextField text='שם בית העסק'
                        val={shopName}
                        on_change_taxt={newShopName=> setShopName(newShopName)}/>
-            <TextField text='כתובת בית העסק'
-                       val={address}
-                       on_change_taxt={newAddress=> setAddress(newAddress)}/>
+            <View >
+                <TouchableOpacity onPress={()=> props.navigation.navigate('Map')}>
+                    <View  flexDirection='row-reverse' alignSelf={'center'} >
+                        <Text>סמן את כתובת בית העסק   </Text>
+                        <IconAnt name={'enviroment'} size={20}/>
+                    </View>
+                </TouchableOpacity>
+            </View> 
             <TextField text='שם בעל העסק'
                        val={bosName}
                        on_change_taxt={newName=> setBosName(newName)}/>
@@ -84,6 +89,7 @@ const NewShopScreen = props => {
             <FlatButton text='אישור'
                         on_Press={()=> 
                         {
+                            setAddress(props.navigation.getParam('address'));
                             if(address =='' || (!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || shopName ==''){
                                     Alert.alert('שגיאה','חלק מהפרטים חסרים או לא מלאים כראוי');
                             }
@@ -97,7 +103,7 @@ const NewShopScreen = props => {
                                     QRCode.toDataURL(qrDetails)
                                     .then(url => {
                                         setQrCode(url);
-                                    });
+                                    }).catch(error=> console.log('Error'));;
 
                                     var newShop={
                                         address: address, 
@@ -106,7 +112,6 @@ const NewShopScreen = props => {
                                         bosTel: bosTel,
                                         shopName: shopName,
                                         logo: image,
-                                        qrCode:qrCode
                                     }
 
                                     refShops.doc(id).set(newShop);
