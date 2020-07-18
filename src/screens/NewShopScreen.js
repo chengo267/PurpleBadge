@@ -106,7 +106,8 @@ const NewShopScreen = props => {
                                     }).catch(error=> console.log('Error'));;
 
                                     var newShop={
-                                        address: address, 
+                                        latitude: props.navigation.getParam('latitude'),
+                                        longitude: props.navigation.getParam('longitude'),
                                         bosId: bosId,
                                         bosName: bosName,
                                         bosTel: bosTel,

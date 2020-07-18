@@ -1,11 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet,Dimensions } from 'react-native';
+import { View, Text, StyleSheet} from 'react-native';
 import * as Location from 'expo-location';
-import {MapView} from 'react-native-maps';
+import MapView from 'react-native-maps';
   
-const MapScreen = props => {
-    const [location, setLocation] = useState(null);
+const MapScreen = () => {
+    const [cuurLocation, setLocation] = useState(null);
     const [loctionPermission, setLoctionPermission] = useState(null);
+    const [latitude, setLatitude] = useState(0);
+    const [longitude, setLongitude] = useState(0);
 
     LocationPermission = async () => {
         const {status}= await Location.requestPermissionsAsync();
@@ -16,19 +18,42 @@ const MapScreen = props => {
         }
     };
   
-      useEffect(() => {
-          LocationPermission();
-      }, []);
+    useEffect(() => {
+        LocationPermission();
+        navigator.geolocation.getCurrentPosition((position) =>{
+            setLatitude(position.coords.latitude);
+            setLongitude(position.coords.longitude);
+        }, (error)=>console.log(error));
+    }, []);
 
+      
       if(loctionPermission=='granted'){
-        return (
+        return(
         <View style={styles.viewStyle}>
-            <MapView style={styles.mapStyle} showsUserLocation/>
+            <MapView style={styles.mapStyle} showsUserLocation>
+                <MapView.Marker
+                    draggable
+                    coordinate={{latitude: (latitude ),
+                                 longitude: (longitude )}}
+                    onDragEnd={(position) =>{
+                        setLatitude(position.nativeEvent.coordinate.latitude);
+                        setLongitude(position.nativeEvent.coordinate.longitude);}}
+                        />
+            </MapView>
+            <View alignSelf={'center'}>
+                  <TouchableOpacity onPress={()=>{ var coord={latitude:latitude,
+                                                              longitude:longitude};
+                                                    props.navigation.navigate('NewShop', coord)}}>
+                      <View >
+                          <Text style={styles.textStyle}>אישור</Text>
+                      </View>
+                  </TouchableOpacity>
+              </View>
         </View>
         );
       }
       else{
-        return (
+        return(
           <View>
             <Text style={styles.textStyle}>Location Permission Not Granted</Text>
           </View>
