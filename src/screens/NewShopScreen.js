@@ -8,10 +8,19 @@ import "firebase/firestore";
 import {isFullName, isId, isPhoneNum} from "../shared/inputValidaton";
 import * as ImagePicker from 'expo-image-picker';
 import QRCode from 'qrcode';
+import * as geofirestore from 'geofirestore';
 
 const NewShopScreen = props => {
+    // Create a Firestore reference
+    const firestore = firebase.firestore();
+    
+    // Create a GeoFirestore reference
+    const GeoFirestore = geofirestore.initializeApp(firestore);
+    
+    
+    // Create a GeoCollection reference
+    const refShopsGeo = GeoFirestore.collection('ShopsDetails');
     const [shopName, setShopName] = useState('');
-    const [address, setAddress] = useState('');
     const [bosName, setBosName] = useState('');
     const [bosTel, setBosTel] = useState('');
     const [bosId, setBosId] = useState('');
@@ -23,6 +32,8 @@ const NewShopScreen = props => {
     const logedInUserDBId= firebase.auth().currentUser.uid;
     const increment=firebase.firestore.FieldValue.increment(1);
   
+
+
     refCollectionSizeDoc.get().then(doc=> {const {size} = doc.data();
                                             setCollectionSize(size);}).catch(error=> console.log('Get Data Error'));;
 
@@ -89,8 +100,7 @@ const NewShopScreen = props => {
             <FlatButton text='אישור'
                         on_Press={()=> 
                         {
-                            setAddress(props.navigation.getParam('address'));
-                            if(address =='' || (!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || shopName ==''){
+                            if((!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || shopName ==''){
                                     Alert.alert('שגיאה','חלק מהפרטים חסרים או לא מלאים כראוי');
                             }
                             else{
@@ -106,8 +116,7 @@ const NewShopScreen = props => {
                                     }).catch(error=> console.log('Error'));;
 
                                     var newShop={
-                                        latitude: props.navigation.getParam('latitude'),
-                                        longitude: props.navigation.getParam('longitude'),
+                                        coordinates: new firebase.firestore.GeoPoint(props.navigation.getParam('latitude'), props.navigation.getParam('longitude')),
                                         bosId: bosId,
                                         bosName: bosName,
                                         bosTel: bosTel,
@@ -115,7 +124,7 @@ const NewShopScreen = props => {
                                         logo: image,
                                     }
 
-                                    refShops.doc(id).set(newShop);
+                                    refShopsGeo.doc(id).set(newShop);
                                     var UserRef = refUsers.doc(logedInUserDBId);
                                     UserRef.update({shops: firebase.firestore.FieldValue.arrayUnion( refShops.doc(id))});
                                     refCollectionSizeDoc.update({size: increment});

@@ -1,9 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as Location from 'expo-location';
 import MapView from 'react-native-maps';
   
-const MapScreen = () => {
+const MapScreen = props => {
     const [cuurLocation, setLocation] = useState(null);
     const [loctionPermission, setLoctionPermission] = useState(null);
     const [latitude, setLatitude] = useState(0);
@@ -41,13 +41,13 @@ const MapScreen = () => {
                         />
             </MapView>
             <View alignSelf={'center'}>
-                  <TouchableOpacity onPress={()=>{ var coord={latitude:latitude,
-                                                              longitude:longitude};
+                <TouchableOpacity onPress={()=>{ var coord={latitude:latitude,
+                                                            longitude:longitude};
                                                     props.navigation.navigate('NewShop', coord)}}>
-                      <View >
+                    <View >
                           <Text style={styles.textStyle}>אישור</Text>
-                      </View>
-                  </TouchableOpacity>
+                    </View>
+                </TouchableOpacity>
               </View>
         </View>
         );
@@ -64,8 +64,7 @@ const MapScreen = () => {
 const styles = StyleSheet.create({
     textStyle:{
         alignSelf:'center',
-        margin:30,
-        top:50,
+        margin:20,
         fontSize:20
     },
     viewStyle: {

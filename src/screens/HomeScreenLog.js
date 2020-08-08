@@ -4,29 +4,58 @@ import * as firebase from 'firebase';
 import { ListItem, SearchBar } from 'react-native-elements';
 import "firebase/firestore";
 import IconAnt from 'react-native-vector-icons/AntDesign';
+import * as geofirestore from 'geofirestore';
+import * as Location from 'expo-location';
+import geohash from 'ngeohash';
 
 const HomeScreenLog = props => {
 
+    var GeohashDistance = require('geohash-distance');
+    const firestore = firebase.firestore();
+    const GeoFirestore = geofirestore.initializeApp(firestore);
+    const refShopsDetails = GeoFirestore.collection('ShopsDetails');
     const [ userName, setUserName ] = useState('');
     const [ search, setSearch ] = useState('');
     const [ shopList, setshopList ] = useState([]);
     const [ realTimeShopList, setRealTimeShopList ] = useState([]);
-    const refShopsDetails = firebase.firestore().collection('ShopsDetails');
+    const [location, setLocation] = useState(null);
+    const [loctionPermission, setLoctionPermission] = useState(null);
     const refUsersDetails = firebase.firestore().collection('UsersDetails');
     const logedInUserDBId= firebase.auth().currentUser.uid;
     
     refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name} = doc.data();
                                                            setUserName(name);}).catch(error=> console.log('Get Data Error'));;
 
+    LocationPermission = async () => {
+        const {status}= await Location.requestPermissionsAsync();
+        setLoctionPermission(status);
+        if (loctionPermission == 'granted'){ 
+            let location = await Location.getCurrentPositionAsync({});
+            if(location==null){
+                setLocation(location);}
+    }};
+    
     useEffect(()=>{
+        LocationPermission();
         refShopsDetails.onSnapshot(querySnapshot =>{
             const list = [];
             querySnapshot.forEach(doc =>{
                 if(doc.id!='collectionSize'){
-                    const {shopName, logo}=doc.data();
-                    list.push({id: doc.id, name: shopName, avatar_url: logo});
+                    const {shopName, logo, g}=doc.data();
+                    list.push({id: doc.id, name: shopName, avatar_url: logo, geohash: g.geohash});
                 }
             });
+            
+            if(location){
+                console.log("if location ", location);
+                const locationHash = geohash.encode(location.coords.latitude, location.coords.longitude, 10);
+                console.log(locationHash);
+                list.sort((a,b)=>{
+                    console.log(GeohashDistance.inKm(a.geohash, locationHash));
+                    console.log(GeohashDistance.inKm(b.geohash, locationHash));
+                return GeohashDistance.inKm(a.geohash, locationHash) - GeohashDistance.inKm(b.geohash, locationHash);
+            });
+            }
             setshopList(list);
             setRealTimeShopList(list);
         });
@@ -34,7 +63,7 @@ const HomeScreenLog = props => {
         const backAction = () => {return true;};
         const backHandler = BackHandler.addEventListener("hardwareBackPress",backAction);
         return () => backHandler.remove();
-    }, []);
+    }, [location]);
 
     
     searchFilterFunction = (newSearch)=> {
