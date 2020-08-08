@@ -54,17 +54,17 @@ const QRcodeScannerScreen = props => {
       return (
         <View>
           <Text style={styles.textStyle} alignSelf={'center'}>Camera Permission Not Granted</Text>
-          <View alignSelf={'center'}>
+            <View alignSelf={'center'}>
                   <TouchableOpacity onPress={()=>props.navigation.navigate('HomeLog')}>
                       <View >
                           <Text style={styles.textStyle}>Cancel</Text>
                       </View>
                   </TouchableOpacity>
-              </View>
+            </View>
         </View>
       );
     }
-
+    
 };
 
 const styles = StyleSheet.create({
