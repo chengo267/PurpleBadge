@@ -47,12 +47,8 @@ const HomeScreenLog = props => {
             });
             
             if(location){
-                console.log("if location ", location);
                 const locationHash = geohash.encode(location.coords.latitude, location.coords.longitude, 10);
-                console.log(locationHash);
                 list.sort((a,b)=>{
-                    console.log(GeohashDistance.inKm(a.geohash, locationHash));
-                    console.log(GeohashDistance.inKm(b.geohash, locationHash));
                 return GeohashDistance.inKm(a.geohash, locationHash) - GeohashDistance.inKm(b.geohash, locationHash);
             });
             }
