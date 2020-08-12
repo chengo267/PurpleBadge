@@ -49,8 +49,7 @@ const HomeScreenLog = props => {
             if(location){
                 const locationHash = geohash.encode(location.coords.latitude, location.coords.longitude, 10);
                 list.sort((a,b)=>{
-                return GeohashDistance.inKm(a.geohash, locationHash) - GeohashDistance.inKm(b.geohash, locationHash);
-            });
+                return GeohashDistance.inKm(a.geohash, locationHash) - GeohashDistance.inKm(b.geohash, locationHash);});
             }
             setshopList(list);
             setRealTimeShopList(list);

@@ -22,7 +22,7 @@ const QRcodeScannerScreen = props => {
       var index = data.search(" ");
       var id = data.slice(0,index);
       var name = data.slice(index+1);
-      if((index==-1)||/^[0-9]/.test(id)){
+      if((index==-1)||!(/^[0-9]/.test(id))){
         Alert.alert('שגיאה', 'ברקוד לא חוקי');
       }
       else{
