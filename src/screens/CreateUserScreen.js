@@ -1,6 +1,6 @@
 import React, {useState} from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity, Alert } from 'react-native';
-import TextField from '../../components/TextField';
+import TextInp from '../../components/TextInp';
 import FlatButton from '../../components/FlatButton';
 import * as firebase from 'firebase';
 import "firebase/firestore";
@@ -21,13 +21,13 @@ const CreateUserScreen = props => {
                 source = {require('../../assets/logo.png')}
             />
             <Text style={styles.textStyle} >יצירת משתמש חדש</Text>
-            <TextField text={'שם מלא'}
+            <TextInp text={'שם מלא'}
                        val={name}
                        on_change_taxt={newName=> setName(newName)}/>
-            <TextField text={'מספר ת"ז'}
+            <TextInp text={'מספר ת"ז'}
                        val={id}
                        on_change_taxt={newId=> setId(newId)}/>
-            <TextField text={'סיסמה'}
+            <TextInp text={'סיסמה'}
                        val={password}
                        on_change_taxt={newPassword=> setPassword(newPassword)}/>
             <View top={-40} left={15} alignSelf={'baseline'}>

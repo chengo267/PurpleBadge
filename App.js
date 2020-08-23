@@ -46,7 +46,7 @@ const navigator = createStackNavigator(
     defaultNavigationOptions: {
       title: "App",
       headerTitle:"התו הסגול",
-      headerLeft: false
+      headerLeft: ()=>false
     },
   }
 );

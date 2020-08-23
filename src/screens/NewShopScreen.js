@@ -1,6 +1,6 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Image, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, Alert } from 'react-native';
-import TextField from '../../components/TextField';
+import TextInp from '../../components/TextInp';
 import FlatButton from '../../components/FlatButton';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import * as firebase from 'firebase';
@@ -68,7 +68,7 @@ const NewShopScreen = props => {
                 source = {require('../../assets/logo.png')}
             />
             <Text style={styles.textStyle}>יצירת בית עסק חדש</Text>
-            <TextField text='שם בית העסק'
+            <TextInp text='שם בית העסק'
                        val={shopName}
                        on_change_taxt={newShopName=> setShopName(newShopName)}/>
             <View >
@@ -79,13 +79,13 @@ const NewShopScreen = props => {
                     </View>
                 </TouchableOpacity>
             </View> 
-            <TextField text='שם בעל העסק'
+            <TextInp text='שם בעל העסק'
                        val={bosName}
                        on_change_taxt={newName=> setBosName(newName)}/>
-            <TextField text='מספר טלפון'
+            <TextInp text='מספר טלפון'
                        val={bosTel}
                        on_change_taxt={newTel=> setBosTel(newTel)}/>
-            <TextField text='מספר ת"ז'
+            <TextInp text='מספר ת"ז'
                        val={bosId}
                        on_change_taxt={newId=> setBosId(newId)}/>
             <View alignSelf={'center'}>

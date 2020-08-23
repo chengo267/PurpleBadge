@@ -1,5 +1,6 @@
 import React, {useState} from 'react';
-import { StyleSheet, View, Text, CheckBox} from 'react-native';
+import { StyleSheet, View, Text} from 'react-native';
+import CheckBox from '@react-native-community/checkbox';
 
 export default function Checkbox({text, val, on_val_change}) {
 

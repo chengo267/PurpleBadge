@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, BackHandler} from 'react-native';
 import * as firebase from 'firebase';
-import { ListItem, SearchBar } from 'react-native-elements';
+import { ListItem, SearchBar, Avatar } from 'react-native-elements';
 import "firebase/firestore";
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import * as geofirestore from 'geofirestore';
@@ -119,7 +119,9 @@ const HomeScreenLog = props => {
                         renderItem={({ item }) => (
                         <ListItem
                             title={item.name}
+                            titleStyle={styles.titleStyle}
                             subtitle={'קוד בית העסק: '+item.id}
+                            subtitleStyle={styles.titleStyle}
                             leftAvatar={{ source: { uri: item.avatar_url } }}
                             bottomDivider
                             chevron    
@@ -148,7 +150,7 @@ const styles = StyleSheet.create({
         left: 50
     },
     viewListStyle:{
-        width:250, 
+        width:270, 
         alignSelf:'flex-end',
         marginTop:20
     },
@@ -174,6 +176,9 @@ const styles = StyleSheet.create({
         marginTop:25,
         flexDirection:'row'
     },
+    titleStyle:{
+        alignSelf:'flex-end'
+    }
 });
 
 export default HomeScreenLog;

@@ -1,7 +1,7 @@
 import React from 'react';
-import { StyleSheet, View, Text, TextInput} from 'react-native';
+import { StyleSheet, View, TextInput} from 'react-native';
 
-export default function TextField({text, on_change_taxt, val, secureText, KeyBoard, top}) {
+export default function TextInp({text, on_change_taxt, val, secureText, KeyBoard, top}) {
     return (
         <View top={top}>
             <TextInput 

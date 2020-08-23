@@ -1,7 +1,7 @@
 import React, {useState, useRef, useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
-import TextField from '../../components/TextField';
+import TextInp from '../../components/TextInp';
 import FlatButton from '../../components/FlatButton';
 import * as firebase from 'firebase';
 import "firebase/firestore";
@@ -55,7 +55,7 @@ const AuthScreen = props => {
     {
       return (
         <View>
-          <TextField text={'מספר טלפון'}
+          <TextInp text={'מספר טלפון'}
                     val={phoneNumber}
                     on_change_taxt={newNum=> {setPhoneNumber(newNum)}}
                     top={100}/>
@@ -67,7 +67,7 @@ const AuthScreen = props => {
     else{
       return(
         <View>
-          <TextField text={'קוד אימות'}
+          <TextInp text={'קוד אימות'}
                     val={code}
                     on_change_taxt={code=> setCode(code)}
                     top={100}/>
