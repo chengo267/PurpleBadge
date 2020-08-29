@@ -18,6 +18,8 @@ import {decode, encode} from 'base-64';
 if (!global.btoa) {  global.btoa = encode }
 if (!global.atob) { global.atob = decode }
 
+console.disableYellowBox = true;
+
 const firebaseConfig = {
   apiKey: "AIzaSyDjBluS_61uj00Rtn_VS2iufonnSaPZ1kE",
   authDomain: "purplebadge-6e593.firebaseapp.com",
