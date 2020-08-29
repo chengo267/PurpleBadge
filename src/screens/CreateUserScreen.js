@@ -7,7 +7,6 @@ import "firebase/firestore";
 import {isFullName, isId, isValidPassword} from "../shared/inputValidaton";
 import IconAnt from 'react-native-vector-icons/AntDesign';
 
-
 const CreateUserScreen = props => {
     const [name, setName] = useState('');
     const [id, setId] = useState('');

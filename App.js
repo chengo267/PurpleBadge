@@ -1,3 +1,4 @@
+import fixTimerBug from './src/fixTimerBug';
 import { createAppContainer} from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
 import 'react-native-gesture-handler';
