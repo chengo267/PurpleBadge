@@ -5,12 +5,10 @@ import FlatButton from '../../components/FlatButton';
 import * as firebase from 'firebase';
 import "firebase/firestore";
 import {isFullName, isId, isValidPassword} from "../shared/inputValidaton";
-import IconAnt from 'react-native-vector-icons/AntDesign';
 
 const CreateUserScreen = props => {
     const [name, setName] = useState('');
     const [id, setId] = useState('');
-    const [password, setPassword] = useState('');
     const refUsers = firebase.firestore().collection('UsersDetails');
 
     return (
@@ -26,19 +24,9 @@ const CreateUserScreen = props => {
             <TextInp text={'מספר ת"ז'}
                        val={id}
                        on_change_taxt={newId=> setId(newId)}/>
-            <TextInp text={'סיסמה'}
-                       val={password}
-                       on_change_taxt={newPassword=> setPassword(newPassword)}/>
-            <View top={-40} left={15} alignSelf={'baseline'}>
-                <TouchableOpacity onPress={()=> Alert.alert('הוראה','הסיסמה צריכה להיות מורכבת מלפחות 8 תווים של אותיות אנגליות ומספרים')}>
-                    <View >
-                        <IconAnt name={'exclamationcircleo'} size={20}></IconAnt>
-                    </View>
-                </TouchableOpacity>
-            </View> 
             <FlatButton text={'אישור'} buttonTop={80} 
                 on_Press={()=> {
-                    if((!isFullName(name)) || (!isId(id)) || (!isValidPassword(password))){
+                    if((!isFullName(name)) || (!isId(id))){
                         Alert.alert('שגיאה', 'חלק מהפרטים חסרים או לא מלאים כראוי');
                     }
                     else{
@@ -46,7 +34,6 @@ const CreateUserScreen = props => {
                                 name: name, 
                                 id: id,
                                 tel: props.navigation.getParam('phoneNun'),
-                                password: password,
                                 shops: []}
                             
                             var userDBid= props.navigation.getParam('userId')

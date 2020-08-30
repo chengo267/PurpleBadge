@@ -5,10 +5,10 @@ import FlatButton from '../../components/FlatButton';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import * as firebase from 'firebase';
 import "firebase/firestore";
-import {isFullName, isId, isPhoneNum} from "../shared/inputValidaton";
+import {isFullName, isId, isPhoneNum, IsValidEmail} from "../shared/inputValidaton";
 import * as ImagePicker from 'expo-image-picker';
-import QRCode from 'qrcode';
 import * as geofirestore from 'geofirestore';
+import IconAnt from 'react-native-vector-icons/AntDesign';
 
 const NewShopScreen = props => {
     // Create a Firestore reference
@@ -21,6 +21,8 @@ const NewShopScreen = props => {
     // Create a GeoCollection reference
     const refShopsGeo = GeoFirestore.collection('ShopsDetails');
     const [shopName, setShopName] = useState('');
+    const [password, setPassword] = useState('');
+    const [email, setEmail] = useState('');
     const [bosName, setBosName] = useState('');
     const [bosTel, setBosTel] = useState('');
     const [bosId, setBosId] = useState('');
@@ -88,6 +90,19 @@ const NewShopScreen = props => {
             <TextInp text='מספר ת"ז'
                        val={bosId}
                        on_change_taxt={newId=> setBosId(newId)}/>
+            <TextInp text='כתובת מייל'
+                       val={email}
+                       on_change_taxt={newId=> setEmail(newId)}/>
+            <TextInp text={'סיסמה'}
+                       val={password}
+                       on_change_taxt={newPassword=> setPassword(newPassword)}/>
+            <View top={-40} left={15} alignSelf={'baseline'}>
+                <TouchableOpacity onPress={()=> Alert.alert('הוראה','הסיסמה צריכה להיות מורכבת מלפחות 8 תווים של אותיות אנגליות ומספרים')}>
+                    <View >
+                        <IconAnt name={'exclamationcircleo'} size={20}></IconAnt>
+                    </View>
+                </TouchableOpacity>
+            </View> 
             <View alignSelf={'center'}>
                 <Text style={styles.textStyle}>לוגו בית העסק</Text>
                 <TouchableOpacity onPress={pickImage} >
@@ -100,7 +115,7 @@ const NewShopScreen = props => {
             <FlatButton text='אישור'
                         on_Press={()=> 
                         {
-                            if((!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || shopName ==''){
+                            if((!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || (!isValidPassword(password)) || (!IsValidEmail(email)) || shopName ==''){
                                     Alert.alert('שגיאה','חלק מהפרטים חסרים או לא מלאים כראוי');
                             }
                             else{
@@ -110,17 +125,14 @@ const NewShopScreen = props => {
                                         shopId:id
                                     }
 
-                                    QRCode.toDataURL(qrDetails)
-                                    .then(url => {
-                                        setQrCode(url);
-                                    }).catch(error=> console.log('Error'));;
-
                                     var newShop={
                                         coordinates: new firebase.firestore.GeoPoint(props.navigation.getParam('latitude'), props.navigation.getParam('longitude')),
                                         bosId: bosId,
                                         bosName: bosName,
                                         bosTel: bosTel,
                                         shopName: shopName,
+                                        email: email,
+                                        password: password,
                                         logo: image,
                                     }
 
