@@ -1,10 +1,12 @@
+//Create User Screen- If a new user wants sign up the app, he need to enter a full name and ID.
+
 import React, {useState} from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity, Alert } from 'react-native';
 import TextInp from '../../components/TextInp';
 import FlatButton from '../../components/FlatButton';
 import * as firebase from 'firebase';
 import "firebase/firestore";
-import {isFullName, isId, isValidPassword} from "../shared/inputValidaton";
+import {isFullName, isId} from "../shared/inputValidaton";
 
 const CreateUserScreen = props => {
     const [name, setName] = useState('');
@@ -38,7 +40,8 @@ const CreateUserScreen = props => {
                             
                             var userDBid= props.navigation.getParam('userId')
                             refUsers.doc(userDBid).set(newUser);
-                            props.navigation.navigate('HomeLog');}}}/>
+                            props.navigation.navigate('HomeLog');
+                    }}}/>
         </View>
     );
 };

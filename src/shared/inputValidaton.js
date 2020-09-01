@@ -1,3 +1,5 @@
+//Functions for input validation
+
 export function isFullName(name)
 {
     var index = name.search(" ");

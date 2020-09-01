@@ -1,3 +1,6 @@
+// Health Declaration Screen - The user should enter a health declaration and their role when entering the shop. 
+//In addition, in order to be allowed to enter the shop, the user must be able to check all the four conditions.
+
 import React, {useState} from 'react';
 import { StyleSheet, View, Image, Text, Alert} from 'react-native';
 import Checkbox from '../../components/Checkbox';
@@ -6,7 +9,7 @@ import { Dropdown } from 'react-native-material-dropdown';
 import "firebase/firestore";
 
 
-const EnterScreen = props => {
+const HealthDeclarationScreen = props => {
 
     const [role, setRole] = useState('');
     const [isSelectedOne, setSelectionOne] = useState(false);
@@ -90,4 +93,4 @@ const styles = StyleSheet.create({
         height:70}
 });
 
-export default EnterScreen;
+export default HealthDeclarationScreen;

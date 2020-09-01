@@ -1,3 +1,6 @@
+//Auth Screen - The connection is made by a verification code sent to the mobile. 
+//If it's an existing user then after the login he will continue to the home page and if it's a new user, he needs to enter some details.
+
 import React, {useState, useRef, useEffect} from 'react';
 import {View, Text, StyleSheet, Image} from 'react-native';
 import { FirebaseRecaptchaVerifierModal } from 'expo-firebase-recaptcha';
@@ -14,6 +17,7 @@ const AuthScreen = props => {
   const [userObj, setUserObj] = useState(null);
   const recaptchaVerifier = useRef(null);
 
+
   useEffect(() => {
     if(userObj){
       if(userObj.additionalUserInfo.isNewUser==true){
@@ -27,6 +31,7 @@ const AuthScreen = props => {
     }
   }, [userObj]);
 
+  //send the phone number and verify it
   const sendVerification = () => {
     const phone= phoneNumber.slice(1);
     const israelCode = '+972';
@@ -38,6 +43,7 @@ const AuthScreen = props => {
       .then(setVerificationId).catch(error=> console.log('Auth Error')); 
   };
   
+  //confirm the verification code
   const confirmCode = () => { 
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verificationId,

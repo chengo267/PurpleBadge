@@ -1,7 +1,12 @@
+// Home Screen LOg- home screen for login users. In this screen the user selects the shop he wants to enter. 
+// He can do this in three ways: by shop name, shop code or scanning QR code.
+// Also, the list of shops is sorted by location.
+//In addition, shop owner can add his shop to the shops list.
+
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Image, Text, TouchableOpacity, FlatList, BackHandler} from 'react-native';
 import * as firebase from 'firebase';
-import { ListItem, SearchBar, Avatar } from 'react-native-elements';
+import { ListItem, SearchBar } from 'react-native-elements';
 import "firebase/firestore";
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import * as geofirestore from 'geofirestore';
@@ -24,6 +29,8 @@ const HomeScreenLog = props => {
     const logedInUserDBId= firebase.auth().currentUser.uid;
     refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name} = doc.data();
                                                            setUserName(name);}).catch(error=> console.log('Get Data Error'));;
+
+    // asking for location permission
     LocationPermission = async () => {
         const {status}= await Location.requestPermissionsAsync();
         setLoctionPermission(status);
@@ -44,6 +51,7 @@ const HomeScreenLog = props => {
                 }
             });
             
+            //sort by location
             if(location){
                 const locationHash = geohash.encode(location.coords.latitude, location.coords.longitude, 10);
                 list.sort((a,b)=>{
@@ -58,11 +66,10 @@ const HomeScreenLog = props => {
         return () => backHandler.remove();
     }, [location]);
 
-    
+    //search function to the shops list
     searchFilterFunction = (newSearch)=> {
-
         setSearch(newSearch);
-          const newShopList = shopList.filter(item => {
+            const newShopList = shopList.filter(item => {
             const itemData = `${item.name} ${item.id}`;
             const textData = newSearch
             return itemData.includes(textData); 
@@ -126,7 +133,7 @@ const HomeScreenLog = props => {
                             bottomDivider
                             chevron    
                             onPress={() => {var shop={shopName: item.name, shopId: item.id}
-                                            props.navigation.navigate('Enter',shop)}}
+                                            props.navigation.navigate('HealthDeclaration',shop)}}
                         />
                         )}
                         keyExtractor={item => item.id}

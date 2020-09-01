@@ -1,3 +1,6 @@
+//Stay Shop Screen- This screen shows that the user can enter the shop and displays an exit button.
+// When the user clicks on the button a visit is recorded in the database (with all the relevant details).
+
 import React, { useEffect, useState } from 'react';
 import { StyleSheet, View, Image, Text, BackHandler} from 'react-native';
 import CircleButton from '../../components/CircleButton';

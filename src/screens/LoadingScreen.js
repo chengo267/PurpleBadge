@@ -1,3 +1,4 @@
+// The loading screen- if the user is logged in then we will continue to the next page, and if not we will go to the login screen(AuthScreen)
 import React, { useEffect } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Image } from 'react-native'
 import * as firebase from 'firebase';

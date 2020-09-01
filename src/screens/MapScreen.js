@@ -1,3 +1,5 @@
+//Map Screen- in this screen shop owner markes his shop location on a map.
+
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import * as Location from 'expo-location';
@@ -9,6 +11,7 @@ const MapScreen = props => {
     const [latitude, setLatitude] = useState(0);
     const [longitude, setLongitude] = useState(0);
 
+    // asking for location permission
     LocationPermission = async () => {
         const {status}= await Location.requestPermissionsAsync();
         setLoctionPermission(status);

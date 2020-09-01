@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 import 'react-native-gesture-handler';
 import HomeScreenLog from './src/screens/HomeScreenLog';
 import NewShopScreen from './src/screens/NewShopScreen';
-import EnterScreen from './src/screens/EnterScreen';
+import HealthDeclarationScreen from './src/screens/HealthDeclarationScreen';
 import StayShopScreen from './src/screens/StayShopScrren';
 import CreateUserScreen from './src/screens/CreateUserScreen';
 import AuthScreen from './src/screens/AuthScreen';
@@ -38,7 +38,7 @@ const navigator = createStackNavigator(
     Auth: AuthScreen,
     CreateUser: CreateUserScreen,
     HomeLog: HomeScreenLog,
-    Enter: EnterScreen,
+    HealthDeclaration: HealthDeclarationScreen,
     Stay: StayShopScreen,
     NewShop: NewShopScreen,
     QRcodeScanner: QRcodeScannerScreen,

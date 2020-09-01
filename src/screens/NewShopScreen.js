@@ -1,3 +1,6 @@
+//New Shop Screen- On this screen a shop owner can add his store to the list of stores.
+//To do so he will need to give some details including an email and password (that will be used by him to login the Purple Badge website).
+
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, View, Image, Text, KeyboardAvoidingView, ScrollView, TouchableOpacity, Alert } from 'react-native';
 import TextInp from '../../components/TextInp';
@@ -10,14 +13,9 @@ import * as ImagePicker from 'expo-image-picker';
 import * as geofirestore from 'geofirestore';
 
 const NewShopScreen = props => {
-    // Create a Firestore reference
+
     const firestore = firebase.firestore();
-    
-    // Create a GeoFirestore reference
     const GeoFirestore = geofirestore.initializeApp(firestore);
-    
-    
-    // Create a GeoCollection reference
     const refShopsGeo = GeoFirestore.collection('ShopsDetails');
     const [shopName, setShopName] = useState('');
     const [password, setPassword] = useState('');
@@ -32,8 +30,6 @@ const NewShopScreen = props => {
     const refCollectionSizeDoc=refShops.doc('collectionSize');
     const logedInUserDBId= firebase.auth().currentUser.uid;
     const increment=firebase.firestore.FieldValue.increment(1);
-  
-
 
     refCollectionSizeDoc.get().then(doc=> {const {size} = doc.data();
                                             setCollectionSize(size);}).catch(error=> console.log('Get Data Error'));;
@@ -48,7 +44,8 @@ const NewShopScreen = props => {
             }
         })();
       }, []);
-
+    
+    //pick image from the local gallery for the shop's logo
     pickImage = async () => {
         var result = await ImagePicker.launchImageLibraryAsync({
             mediaTypes: ImagePicker.MediaTypeOptions.All,

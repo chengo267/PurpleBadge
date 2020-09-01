@@ -1,3 +1,5 @@
+//QR Code Scanner Screen- On this screen the user can scan the QR code of the shop he wantes to get in it.
+
 import React, {useState, useEffect} from 'react';
 import { TouchableOpacity, Text, View, StyleSheet, Alert } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
@@ -8,6 +10,7 @@ const QRcodeScannerScreen = props => {
     const [ cameraPermission, setCameraPermission ] = useState(null);
     const [ data, setData ] = useState(null);
 
+    //asking for camera permission
     requestCameraPermission = async () => {
       const {status}=await Permissions.askAsync(Permissions.CAMERA);
       setCameraPermission(status);
