@@ -22,10 +22,8 @@ const HomeScreenLog = props => {
     const [loctionPermission, setLoctionPermission] = useState(null);
     const refUsersDetails = firebase.firestore().collection('UsersDetails');
     const logedInUserDBId= firebase.auth().currentUser.uid;
-    
     refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name} = doc.data();
                                                            setUserName(name);}).catch(error=> console.log('Get Data Error'));;
-
     LocationPermission = async () => {
         const {status}= await Location.requestPermissionsAsync();
         setLoctionPermission(status);
@@ -99,8 +97,10 @@ const HomeScreenLog = props => {
                 source={require('../../assets/instru.png')}/>
             <View alignSelf={'center'} >
                 <TouchableOpacity  onPress={()=>props.navigation.navigate('NewShop')}>
-                    <View>
-                        <Text>בעל בית עסק? לחץ כדי להוסיף אותו לאפליקציה!</Text>
+                    <View flexDirection={'row'}>
+                        <Text> כדי להוסיף אותו לאפליקציה!</Text>
+                        <Text style={styles.underStyle}>לחץ כאן</Text>
+                        <Text> בעל בית עסק? </Text>
                     </View>
                 </TouchableOpacity>
             </View>
@@ -178,6 +178,9 @@ const styles = StyleSheet.create({
     },
     titleStyle:{
         alignSelf:'flex-end'
+    },
+    underStyle:{
+        textDecorationLine: 'underline'
     }
 });
 

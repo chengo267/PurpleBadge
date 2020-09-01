@@ -5,10 +5,9 @@ import FlatButton from '../../components/FlatButton';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import * as firebase from 'firebase';
 import "firebase/firestore";
-import {isFullName, isId, isPhoneNum, IsValidEmail} from "../shared/inputValidaton";
+import {isFullName, isId, isPhoneNum, IsValidEmail, isValidPassword} from "../shared/inputValidaton";
 import * as ImagePicker from 'expo-image-picker';
 import * as geofirestore from 'geofirestore';
-import IconAnt from 'react-native-vector-icons/AntDesign';
 
 const NewShopScreen = props => {
     // Create a Firestore reference
