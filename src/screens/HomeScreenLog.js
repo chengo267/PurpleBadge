@@ -36,7 +36,7 @@ const HomeScreenLog = props => {
         setLoctionPermission(status);
         if (loctionPermission == 'granted'){ 
             let location = await Location.getCurrentPositionAsync({});
-            if(location==null){
+            if(location){
                 setLocation(location);}
     }};
     
@@ -50,7 +50,7 @@ const HomeScreenLog = props => {
                     list.push({id: doc.id, name: shopName, avatar_url: logo, geohash: g.geohash});
                 }
             });
-            
+
             //sort by location
             if(location){
                 const locationHash = geohash.encode(location.coords.latitude, location.coords.longitude, 10);

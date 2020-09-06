@@ -11,6 +11,7 @@ import "firebase/firestore";
 import {isFullName, isId, isPhoneNum, IsValidEmail, isValidPassword} from "../shared/inputValidaton";
 import * as ImagePicker from 'expo-image-picker';
 import * as geofirestore from 'geofirestore';
+import { useScreens } from 'react-native-screens';
 
 const NewShopScreen = props => {
 
@@ -26,7 +27,7 @@ const NewShopScreen = props => {
     const [image, setImage]= useState('https://748073e22e8db794416a-cc51ef6b37841580002827d4d94d19b6.ssl.cf3.rackcdn.com/not-found.png');
     const [collectionSize, setCollectionSize] = useState(0);
     const refShops = firebase.firestore().collection('ShopsDetails');
-    const refUsers = firebase.firestore().collection('UsersDetails');
+    const refUsersDetails = firebase.firestore().collection('UsersDetails');
     const refCollectionSizeDoc=refShops.doc('collectionSize');
     const logedInUserDBId= firebase.auth().currentUser.uid;
     const increment=firebase.firestore.FieldValue.increment(1);
@@ -133,10 +134,19 @@ const NewShopScreen = props => {
                                     }
 
                                     refShopsGeo.doc(id).set(newShop);
-                                    var UserRef = refUsers.doc(logedInUserDBId);
+                                    var UserRef = refUsersDetails.doc(logedInUserDBId);
                                     UserRef.update({shops: firebase.firestore.FieldValue.arrayUnion( refShops.doc(id))});
                                     refCollectionSizeDoc.update({size: increment});
                                     props.navigation.navigate('HomeLog');
+
+                                    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(userCredential) {
+                                        var usersref = firebase.firestore().collection('users');
+                                        var user = usersref.doc(userCredential.user.uid);
+                                        user.set({email: email, shopName: shopName, shopId: id});
+                                        //console.log(userCredential.user.uid);
+                                      }).catch(function(error) {
+                                  
+                                      });
                             }
                         }}/>
         </ScrollView>

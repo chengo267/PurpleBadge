@@ -26,6 +26,7 @@ const MapScreen = props => {
         navigator.geolocation.getCurrentPosition((position) =>{
             setLatitude(position.coords.latitude);
             setLongitude(position.coords.longitude);
+
         }, (error)=>console.log(error));
     }, []);
 
@@ -33,7 +34,13 @@ const MapScreen = props => {
       if(loctionPermission=='granted'){
         return(
         <View style={styles.viewStyle}>
-            <MapView style={styles.mapStyle} showsUserLocation>
+            <MapView style={styles.mapStyle} showsUserLocation 
+                    region={{
+                        latitude: latitude,
+                        longitude: longitude,
+                        latitudeDelta: 0.05,
+                        longitudeDelta: 0.05,
+                      }}>
                 <MapView.Marker
                     draggable
                     coordinate={{latitude: (latitude ),
