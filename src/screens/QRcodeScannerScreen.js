@@ -30,7 +30,7 @@ const QRcodeScannerScreen = props => {
       }
       else{
         var shop={shopName: name, shopId: id};
-        props.navigation.navigate('Enter',shop)
+        props.navigation.navigate('HealthDeclaration',shop)
       }
     };
 
