@@ -27,6 +27,7 @@ const HomeScreenLog = props => {
     const [loctionPermission, setLoctionPermission] = useState(null);
     const refUsersDetails = firebase.firestore().collection('UsersDetails');
     const logedInUserDBId= firebase.auth().currentUser.uid;
+
     refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name} = doc.data();
                                                            setUserName(name);}).catch(error=> console.log('Get Data Error'));;
 

@@ -11,7 +11,6 @@ import "firebase/firestore";
 import {isFullName, isId, isPhoneNum, IsValidEmail, isValidPassword} from "../shared/inputValidaton";
 import * as ImagePicker from 'expo-image-picker';
 import * as geofirestore from 'geofirestore';
-import { useScreens } from 'react-native-screens';
 
 const NewShopScreen = props => {
 
@@ -30,7 +29,6 @@ const NewShopScreen = props => {
     const refUsersDetails = firebase.firestore().collection('UsersDetails');
     const refCollectionSizeDoc=refShops.doc('collectionSize');
     const logedInUserDBId= firebase.auth().currentUser.uid;
-    const increment=firebase.firestore.FieldValue.increment(1);
 
     refCollectionSizeDoc.get().then(doc=> {const {size} = doc.data();
                                             setCollectionSize(size);}).catch(error=> console.log('Get Data Error'));;
@@ -117,10 +115,6 @@ const NewShopScreen = props => {
                             }
                             else{
                                     var id = (collectionSize).toString();
-                                    var qrDetails={
-                                        shopName: shopName,
-                                        shopId:id
-                                    }
 
                                     var newShop={
                                         coordinates: new firebase.firestore.GeoPoint(props.navigation.getParam('latitude'), props.navigation.getParam('longitude')),
@@ -136,14 +130,13 @@ const NewShopScreen = props => {
                                     refShopsGeo.doc(id).set(newShop);
                                     var UserRef = refUsersDetails.doc(logedInUserDBId);
                                     UserRef.update({shops: firebase.firestore.FieldValue.arrayUnion( refShops.doc(id))});
-                                    refCollectionSizeDoc.update({size: increment});
+                                    refCollectionSizeDoc.update({"size": firebase.firestore.FieldValue.increment(1)});
                                     props.navigation.navigate('HomeLog');
 
                                     firebase.auth().createUserWithEmailAndPassword(email, password).then(function(userCredential) {
                                         var usersref = firebase.firestore().collection('users');
                                         var user = usersref.doc(userCredential.user.uid);
                                         user.set({email: email, shopName: shopName, shopId: id});
-                                        //console.log(userCredential.user.uid);
                                       }).catch(function(error) {
                                   
                                       });
