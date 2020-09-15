@@ -20,7 +20,7 @@ const StayShopScreen = props => {
     refUsersDetails.doc(logedInUserDBId).get().then(doc=> {const {name, tel, id} = doc.data();
                                                             setUserName(name);
                                                             setPhonNum(tel);
-                                                            setUserId(id);}).catch(error=> console.log('Get Data Error'));;
+                                                            setUserId(id);}).catch(error=> console.log(error));;
     
 
     useEffect(() => {

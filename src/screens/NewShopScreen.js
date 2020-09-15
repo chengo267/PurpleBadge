@@ -137,7 +137,8 @@ const NewShopScreen = props => {
                                         var usersref = firebase.firestore().collection('users');
                                         var user = usersref.doc(userCredential.user.uid);
                                         user.set({email: email, shopName: shopName, shopId: id});
-                                      }).catch(function(error) {
+                           
+                                    }).catch(function(error) {
                                   
                                       });
                             }
