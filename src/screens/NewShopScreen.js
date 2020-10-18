@@ -8,7 +8,7 @@ import FlatButton from '../../components/FlatButton';
 import IconAnt from 'react-native-vector-icons/AntDesign';
 import * as firebase from 'firebase';
 import "firebase/firestore";
-import {isFullName, isId, isPhoneNum, IsValidEmail, isValidPassword} from "../shared/inputValidaton";
+import {isFullName, isId, isPhoneNum, IsValidEmail} from "../shared/inputValidaton";
 import * as ImagePicker from 'expo-image-picker';
 import * as geofirestore from 'geofirestore';
 
@@ -18,7 +18,7 @@ const NewShopScreen = props => {
     const GeoFirestore = geofirestore.initializeApp(firestore);
     const refShopsGeo = GeoFirestore.collection('ShopsDetails');
     const [shopName, setShopName] = useState('');
-    const [password, setPassword] = useState('');
+ //const [password, setPassword] = useState('');
     const [email, setEmail] = useState('');
     const [bosName, setBosName] = useState('');
     const [bosTel, setBosTel] = useState('');
@@ -88,9 +88,9 @@ const NewShopScreen = props => {
             <TextInp text='כתובת מייל'
                        val={email}
                        on_change_taxt={newId=> setEmail(newId)}/>
-            <TextInp text={'סיסמה'}
+            {/* <TextInp text={'סיסמה'}
                        val={password}
-                       on_change_taxt={newPassword=> setPassword(newPassword)}/>
+                       on_change_taxt={newPassword=> setPassword(newPassword)}/> */}
             <View top={-40} left={15} alignSelf={'baseline'}>
                 <TouchableOpacity onPress={()=> Alert.alert('הוראה','הסיסמה צריכה להיות מורכבת מלפחות 8 תווים של אותיות אנגליות ומספרים')}>
                     <View >
@@ -110,7 +110,7 @@ const NewShopScreen = props => {
             <FlatButton text='אישור'
                         on_Press={()=> 
                         {
-                            if((!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || (!isValidPassword(password)) || (!IsValidEmail(email)) || shopName ==''){
+                            if((!isId(bosId)) || (!isFullName(bosName)) || (!isPhoneNum(bosTel)) || (!IsValidEmail(email)) || shopName ==''){
                                     Alert.alert('שגיאה','חלק מהפרטים חסרים או לא מלאים כראוי');
                             }
                             else{
@@ -123,7 +123,7 @@ const NewShopScreen = props => {
                                         bosTel: bosTel,
                                         shopName: shopName,
                                         email: email,
-                                        password: password,
+                                        //password: password,
                                         logo: image,
                                     }
 
@@ -133,14 +133,14 @@ const NewShopScreen = props => {
                                     refCollectionSizeDoc.update({"size": firebase.firestore.FieldValue.increment(1)});
                                     props.navigation.navigate('HomeLog');
 
-                                    firebase.auth().createUserWithEmailAndPassword(email, password).then(function(userCredential) {
-                                        var usersref = firebase.firestore().collection('users');
-                                        var user = usersref.doc(userCredential.user.uid);
-                                        user.set({email: email, shopName: shopName, shopId: id});
+                                    // firebase.auth().createUserWithEmailAndPassword(email, password).then(function(userCredential) {
+                                    //     var usersref = firebase.firestore().collection('users');
+                                    //     var user = usersref.doc(userCredential.user.uid);
+                                    //     user.set({email: email, shopName: shopName, shopId: id});
                            
-                                    }).catch(function(error) {
+                                    // }).catch(function(error) {
                                   
-                                      });
+                                    //   });
                             }
                         }}/>
         </ScrollView>

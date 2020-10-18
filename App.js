@@ -11,6 +11,7 @@ import AuthScreen from './src/screens/AuthScreen';
 import LoadingScreen from './src/screens/LoadingScreen';
 import QRcodeScannerScreen from './src/screens/QRcodeScannerScreen';
 import MapScreen from './src/screens/MapScreen';
+import MyShopsScreen from './src/screens/MyShopsScreen';
 import * as firebase from 'firebase';
 import "firebase/firestore";
 
@@ -42,10 +43,11 @@ const navigator = createStackNavigator(
     Stay: StayShopScreen,
     NewShop: NewShopScreen,
     QRcodeScanner: QRcodeScannerScreen,
-    Map: MapScreen
+    Map: MapScreen,
+    MyShops: MyShopsScreen
   },
   {
-    initialRouteName: "Loading",
+    initialRouteName: "MyShops",
     defaultNavigationOptions: {
       title: "App",
       headerTitle:"התו הסגול",

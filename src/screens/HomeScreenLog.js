@@ -80,7 +80,7 @@ const HomeScreenLog = props => {
     }
 
     renderHeader = () => {
-        return <SearchBar placeholder="Type Here..." 
+        return <SearchBar placeholder="חיפוש" 
                           lightTheme
                           round 
                           onChangeText={(newSearch)=> searchFilterFunction(newSearch)}
@@ -138,6 +138,7 @@ const HomeScreenLog = props => {
                         />
                         )}
                         keyExtractor={item => item.id}
+                        scrollEnabled
                         ListHeaderComponent={renderHeader()}/>
                 </View>
             </View>
