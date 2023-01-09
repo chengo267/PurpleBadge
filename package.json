@@ -23,7 +23,7 @@
     "expo-location": "~8.1.0",
     "expo-permissions": "~8.1.0",
     "firebase": "^7.9.0",
-    "firebase-admin": "^8.12.1",
+    "firebase-admin": "^11.4.1",
     "geofirestore": "^4.3.0",
     "geohash-distance": "^1.0.2",
     "geohash-helper": "0.0.2",
